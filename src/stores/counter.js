@@ -1,9 +1,10 @@
-import { useStrict, observable, action } from 'mobx';
+import { useStrict, observable, action, extendObservable } from 'mobx';
 import axios from 'axios';
 
 useStrict(true);
 
 export default class Counter {
+
   @observable count = 0;
 
   @action.bound
@@ -19,13 +20,18 @@ export default class Counter {
 
   @action
   incrementAsync(num) {
-    // setTimeout(() => {
-    //   this.count += num;
-    // }, 1000);
-    setTimeout(function() {
-      this.count += num;
-    });
+    setTimeout(() => {
+     this.count += num;
+    }, 1000);
   }
+
+  // @action
+  // decrementAsync() {
+  //   axios.get('http://localhost:8081/').then((result) => {
+  //     console.log(result.data.length);
+  //     this.count += result.data.length;
+  //   });
+  // }
 
   @action
   async decrementAsync() {

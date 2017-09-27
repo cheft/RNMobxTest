@@ -1,17 +1,14 @@
 {
-  "passPerPreset": true, // this is required
+  "passPerPreset": true,
   "presets": [
     {
       "plugins": ["transform-regenerator"]
     },
     {
-      "plugins": ["transform-class-properties"]
-    },
-    {
       "plugins": ["mobx-deep-action"]
     },
     {
-      "plugins": ["babel-plugin-transform-decorators-legacy"]
+      "plugins": ["transform-decorators-legacy", "transform-class-properties"]
     },
     "react-native"
   ]
