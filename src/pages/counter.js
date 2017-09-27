@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
-  TouchableHighlight,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import { observer } from 'mobx-react/native';
+import { action, autorun, autorunAsync } from 'mobx';
 import CounterStore from '../stores/counter';
 
 const styles = StyleSheet.create({
@@ -31,27 +32,53 @@ const styles = StyleSheet.create({
 export default class CounterUI extends Component {
   store = new CounterStore();
 
+  componentDidMount() {
+    // this.watchStore = autorun(() => {
+    //   // console.log('神奇函数，只有访问的值变化时才会触发', this.store.feature);
+    //   console.log('神奇函数，只有访问的值变化时才会触发', this.store.ticks.toJS());
+    // });
+
+    // 异步执行，500 毫秒内如果有多次变化也只执行一次，通常用来控制与后台交互频率
+    this.watchStore = autorunAsync(() => {
+      // console.log('神奇函数，只有访问的值变化时才会触发', this.store.feature);
+      console.log('神奇函数，只有访问的值变化时才会触发', this.store.ticks.toJS());
+    }, 500);
+  }
+
+  componentWillUnmount() {
+    this.watchStore();
+  }
+
+  // @action.bound
+  // test() {
+  //   console.log(this.store);
+  //   this.store.count = 10000;
+  // }
+
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.heading}>Mobx Counter</Text>
-        <TouchableHighlight onPress={this.store.increment}>
+        <TouchableOpacity onPress={this.store.increment}>
           <Text style={styles.text}>|   +   | </Text>
-        </TouchableHighlight>
+        </TouchableOpacity>
 
-        <Text style={styles.text}>Clicked: {this.store.count} times</Text>
+        <Text style={styles.text}>计数器为: {this.store.feature}</Text>
+        <Text style={styles.text}>计数器为: {this.store.count}</Text>
+        <Text style={styles.text}>点击了: {this.store.ticksLen} 次</Text>
 
-        <TouchableHighlight onPress={this.store.decrement}>
+        <TouchableOpacity onPress={this.store.decrement}>
           <Text style={styles.text}>|   -   | </Text>
-        </TouchableHighlight>
+        </TouchableOpacity>
 
-        <TouchableHighlight onPress={() => this.store.incrementAsync(5)}>
+        <TouchableOpacity onPress={() => this.store.incrementAsync()}>
           <Text style={styles.text}>|   + Async   | </Text>
-        </TouchableHighlight>
+        </TouchableOpacity>
 
-        <TouchableHighlight onPress={() => this.store.decrementAsync(5)}>
+        <TouchableOpacity onPress={() => this.store.decrementAsync(100)}>
           <Text style={styles.text}>|   - Async   | </Text>
-        </TouchableHighlight>
+        </TouchableOpacity>
+        
       </View>
     );
   }

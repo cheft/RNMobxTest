@@ -1,6 +1,9 @@
 import React from 'react';
 import { View, StatusBar } from 'react-native';
 import Counter from './pages/counter';
+import { useStrict } from 'mobx';
+
+useStrict(true);
 
 export default function () {
   return (
